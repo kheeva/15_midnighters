@@ -16,7 +16,7 @@ def load_attempts(pages):
 
 
 def get_midnighters(attempts):
-    owl_time = range(0, 6)
+    owl_time = range(6)
     night_attempts = filter(lambda x: datetime.fromtimestamp(
                                         x['timestamp'],
                                         pytz.timezone(x['timezone'])
