@@ -17,12 +17,22 @@ def load_attempts(pages):
 
 def get_midnighters(attempts):
     owl_time = range(0, 6)
-    return list(filter(lambda x: datetime.fromtimestamp(x['timestamp'], pytz.timezone(x['timezone'])).hour in owl_time, attempts))
+    night_attempts = filter(lambda x: datetime.fromtimestamp(
+                                        x['timestamp'],
+                                        pytz.timezone(x['timezone'])
+                                    ).hour in owl_time,
+                            attempts)
+    return {username['username'] for username in night_attempts}
 
 
 if __name__ == '__main__':
-  start_page = 1
-  number_of_pages = download_attempts_page_json(start_page)['number_of_pages']
-  attempts_pages = load_attempts(number_of_pages)
-  for page in attempts_pages:
-      print(get_midnighters(page))
+    midnighters = set()
+    start_page = 1
+    number_of_pages = download_attempts_page_json(start_page)['number_of_pages']
+    attempts_pages = load_attempts(number_of_pages)
+    for page in attempts_pages:
+        midnighters = midnighters.union(get_midnighters(page))
+
+    print('There are the users who turned out at a task at night:')
+    for username in midnighters:
+        print(username)
